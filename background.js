@@ -7,27 +7,13 @@ var randomNumber = ()=>{
   return Math.floor((Math.random() * 100));
 }
 
-var sendMsg = ()=>{
-chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-  chrome.tabs.sendMessage(tabs[0].id, {greeting: "hello"}, function(response) {
-    alert(response.farewell);
-  });
-});
-};
+console.log('ok!');
 
-$(document).ready(function() {
-  chrome.storage.sync.get("data", function(items) {
-    if(items){
-      search = items.data;
-    }else{
-      search = "cats";
-    }
-  });
-
-  console.log("work");
+function doShit(search) {
 
   var searchUrl = `https://api.giphy.com/v1/gifs/search?q=${search}&api_key=dc6zaTOxFJmzC&limit=100`;
 
+  $.get(searchUrl, function(result) {
     $('*').each(function(){
 
       number = randomNumber();
@@ -39,4 +25,15 @@ $(document).ready(function() {
 
     });
 
+  });
+}
+
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    console.log(sender.tab ?
+                "from a content script:" + sender.tab.url :
+                "from the extension");
+    if (request.greeting == "hello")
+    doShit();
+      sendResponse({farewell: "goodbye"});
   });
