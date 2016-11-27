@@ -14,14 +14,11 @@ function doShit(search) {
   var searchUrl = `https://api.giphy.com/v1/gifs/search?q=${search}&api_key=dc6zaTOxFJmzC&limit=100`;
 
   $.get(searchUrl, function(result) {
-    $('*').each(function(){
+    $('img').each(function(){
 
       number = randomNumber();
       var image = result.data[number].images.downsized.url;
-
-        if ($(this).is('img')) {
-            $(this).attr('src',image);
-        }
+      $(this).attr('src',image);
 
     });
 
